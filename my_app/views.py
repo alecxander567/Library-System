@@ -3,12 +3,13 @@ from django.contrib.auth import login, authenticate
 from .forms import SignUpForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from .models import Book, UserAccount, Post
+from .models import Book, UserAccount, Post, Comment
 from django.http import JsonResponse
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from .forms import LoginForm
 import json
+from django.shortcuts import get_object_or_404
 
 # Landingpage
 def landingpage(request):
@@ -27,7 +28,7 @@ def adminpage(request):
     # Only admins can access this page
     if user_account.role != 'admin': 
         # Redirect non-admins to user homepage 
-        return redirect('user_home')  
+        return redirect('userhomepage')  
     return render(request, 'adminpage.html')
 
 # Sign up the user
@@ -154,16 +155,80 @@ def post_user(request):
 @login_required
 def get_posts(request):
     posts = Post.objects.all().order_by('-created_at')
-    posts_data = []
-    
+    post_data = []
+
     for post in posts:
-        posts_data.append({
+        post_data.append({
+            'id': post.id,
             'username': post.user.username,
             'content': post.content,
-            'created_at': post.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+            'created_at': post.created_at.strftime('%Y-%m-%d %H:%M'),
+            'like_count': post.total_likes(),
+            'liked_by_user': request.user in post.likes.all(),
+            'comments': [
+                {
+                    'username': comment.user.username,
+                    'content': comment.content,
+                    'created_at': comment.created_at.strftime('%Y-%m-%d %H:%M')
+                }
+                for comment in post.comments.all()
+            ],
+            # Check if the logged-in user is the post owner
+            'can_delete': request.user == post.user 
         })
+
+    return JsonResponse({'posts': post_data})
+
+# Like post (User View)
+@login_required
+def like_post(request, post_id):
+    post = Post.objects.get(id=post_id)
+    user = request.user
+
+    if user in post.likes.all():
+        post.likes.remove(user)
+        liked = False
+    else:
+        post.likes.add(user)
+        liked = True
+
+    return JsonResponse({
+        'liked': liked,
+        'like_count': post.total_likes()
+    })
+ 
+ # Comments on posts (Users View)   
+@login_required
+def add_comment(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
     
-    return JsonResponse({'posts': posts_data})
+    if request.method == 'POST':
+        content = request.POST.get('content')
+        if content:
+            comment = Comment.objects.create(user=request.user, post=post, content=content)
+            return JsonResponse({
+                'comment_id': comment.id,
+                'username': comment.user.username,
+                'content': comment.content,
+                'created_at': comment.created_at.strftime('%Y-%m-%d %H:%M')
+            })
+
+    return JsonResponse({'error': 'Invalid request'}, status=400)
+
+# Delete posts view (Users View)
+@login_required
+def delete_post(request):
+    if request.method == 'POST':
+        post_id = request.POST.get('post_id')
+        post = Post.objects.get(id=post_id)
+
+        # Ensure the user is the owner of the post
+        if post.user == request.user:  
+            post.delete()
+            return JsonResponse({'success': True})
+        else:
+            return JsonResponse({'success': False, 'error': 'You can only delete your own posts.'})
+
 
 # Log out
 def logout_view(request):

@@ -11,5 +11,8 @@ urlpatterns = [
     path('api/books/', views.get_books, name='get_books'),
     path('api/post_user/', views.post_user, name='post_user'),
     path('api/get_posts/', views.get_posts, name='get_posts'),
+    path('like/<int:post_id>/', views.like_post, name='like_post'),
+    path('comment/<int:post_id>/', views.add_comment, name='add_comment'),
+    path('api/delete_post/', views.delete_post, name='delete_post'),
     path('logout/', views.logout_view, name='logout'),
 ]
