@@ -14,10 +14,9 @@ and more ongoing features...
   and more ingoing features...
 
   # Technologies I'm using </>
- To handle the front-end :
+ To handle the front-end : <br>
   [![My Skills](https://skillicons.dev/icons?i=html,css,js,bootstrap)](https://skillicons.dev) <br>
   
  To handle the back-end :
-  - Python(django), SQLite
-
+  [![My Skills](https://skillicons.dev/icons?i=python,django,sqlite)](https://skillicons.dev)
   note : This project is still ongoing...
