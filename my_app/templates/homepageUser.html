@@ -6,19 +6,34 @@
 
 {% block content %}
 <style>
-  .main-content {
+.main-content {
     margin-left: 250px;
     padding: 1rem;
     transition: margin-left 0.3s ease-in-out;
   }
-  @media (max-width: 768px) {
+@media (max-width: 768px) {
     .main-content {
       margin-left: 0;
     }
   }
-  .card-body {
+.card-body {
     background: #C7AD7F;
+    box-shadow: 0 0 5px;
+    border: none;
+    padding-bottom: 0;
   }
+.comment {
+    margin-bottom: 15px; /* Adds space between comments */
+  }
+
+.comment-date {
+    display: block;        /* Makes the date appear on a new line */
+    margin-top: 5px;       /* Adds space between the comment content and the date */
+    margin-bottom: 10px;   /* Adds space below the date */
+  }
+#commentsContainer {
+    display: block; /* Comments are initially visible */
+}
 </style>
 
 {% block header %} 
@@ -61,8 +76,8 @@
   </div>
 </div>
 
-<div class="posts mt-4" id="postsContainer">
-  <!-- Posts will be inserted here dynamically -->
+<div id="postsContainer">
+  <!--Posts Goes here-->
 </div>
 
 {% if messages %}
