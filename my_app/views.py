@@ -197,7 +197,7 @@ def like_post(request, post_id):
         'like_count': post.total_likes()
     })
  
- # Comments on posts (Users View)   
+# Comments on posts (Users View)   
 @login_required
 def add_comment(request, post_id):
     post = get_object_or_404(Post, id=post_id)
@@ -232,4 +232,4 @@ def delete_post(request):
 # Log out
 def logout_view(request):
     logout(request)
-    return redirect('login')
+    return redirect('landingpage')
