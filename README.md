@@ -14,7 +14,7 @@ and more ongoing features...
   and more ingoing features...
 
   # Technologies I'm using </>
-  To handle the front-end :
+ To handle the front-end :
   - HTML, CSS, Javascript, Bootstrap 5 <br>
   
  To handle the back-end :
