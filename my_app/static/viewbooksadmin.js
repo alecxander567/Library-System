@@ -1,23 +1,19 @@
 // Function to fetch books from the Django API
 function fetchBooks() {
-    fetch('/api/books/')  // Make a request to the API endpoint
+    fetch('/api/books/')
         .then(response => response.json())
         .then(data => {
             const bookListDiv = document.getElementById('bookList');
             const books = data.books;
             
-            // Clear the previous content
             bookListDiv.innerHTML = '';
             
-            // Loop through the books and display them
             books.forEach(book => {
                 const bookItem = document.createElement('div');
                 bookItem.classList.add('card', 'book-card');
                 
-                // If the book has an image, use the full URL (MEDIA_URL + image path)
                 const bookImage = book.image ? `${window.location.origin}${book.image}` : 'default-book-cover.jpg';
 
-                // Add book details in a card layout
                 bookItem.innerHTML = `
                 <div class="book-card d-flex flex-column">
                     ${book.image ? `<img src="${book.image}" alt="Book Cover" class="book-cover">` : '<p>No cover image available</p>'}
@@ -35,12 +31,10 @@ function fetchBooks() {
                     </div>
                 </div>
             `;            
-                // Append the book item (card) to the book list
                 bookListDiv.appendChild(bookItem);
             });
         })
         .catch(error => console.error('Error fetching books:', error));
 }
 
-// Call the fetchBooks function when the page loads
 window.onload = fetchBooks;
