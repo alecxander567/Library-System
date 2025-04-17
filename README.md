@@ -13,4 +13,10 @@ and more ongoing features...
 - Can modify their accounts
   and more ingoing features...
 
+  # Technologies I'm using </>
+  To handle the front-end :
+  - HTML, CSS, Javascript, Bootstrap 5
+  To handle the back-end :
+  - Python(django), SQLlite
+
   note : This project is still ongoing...
