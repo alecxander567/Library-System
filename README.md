@@ -17,6 +17,6 @@ and more ongoing features...
  To handle the front-end : <br>
   [![My Skills](https://skillicons.dev/icons?i=html,css,js,bootstrap)](https://skillicons.dev) <br>
   
- To handle the back-end :
-  [![My Skills](https://skillicons.dev/icons?i=python,django,sqlite)](https://skillicons.dev)
+ To handle the back-end : <br>
+  [![My Skills](https://skillicons.dev/icons?i=python,django,sqlite)](https://skillicons.dev) <br>
   note : This project is still ongoing...
