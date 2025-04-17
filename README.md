@@ -15,7 +15,7 @@ and more ongoing features...
 
   # Technologies I'm using </>
  To handle the front-end :
-  - HTML, CSS, JavaScript, Bootstrap 5 <br>
+  [![My Skills](https://skillicons.dev/icons?i=html,css,js,bootstrap)](https://skillicons.dev) <br>
   
  To handle the back-end :
   - Python(django), SQLite
