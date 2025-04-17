@@ -1,0 +1,286 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Adming Page{% endblock %}
+
+{% block content %}
+
+<style>
+    body {
+        background-color: #F5F5DD;
+        color: black;
+        margin: 0;
+        padding: 0;
+    }   
+    .sidebar {
+        background-color: #8B4411;
+        padding: 1rem;
+        height: 100vh;
+        position: fixed;
+        width: 250px;
+        top: 0;
+        left: 0;
+        overflow-y: auto;
+        transition: transform 0.3s ease-in-out;
+        transform: translateX(0);
+    }    
+    .sidebar.hide {
+        transform: translateX(-100%);
+    }    
+    .sidebar a {
+        color: #ccc;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        border-radius: 0.375rem;
+        padding: 0.5rem 0.75rem;
+        display: flex;
+        align-items: center;
+    }
+          
+    .sidebar a:hover {
+        background-color: #C7AD7F;
+        color: #fff;
+    }
+          
+    .sidebar .nav-link.active {
+        background-color: #333;
+        color: white !important;
+    }
+          
+    .icon-books      { color: #ffc107 !important; }
+    .icon-members    { color: #20c997 !important; }
+    .icon-issued     { color: #fd7e14 !important; }
+    .bi-file-earmark-plus { color:rgb(31, 197, 219) !important; }
+          
+    /* ✅ Responsive Styles */
+    @media (max-width: 768px) {
+        .sidebar {
+            transform: translateX(-100%);
+            position: fixed;
+            z-index: 1000;
+        }
+          
+        .sidebar.show {
+            transform: translateX(0);
+        }
+          
+        /* Show toggle button on small screens */
+        .toggle-btn {
+            display: block;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            margin: 1rem;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 1050; /* Make sure the button is on top */
+        }
+    
+        h1 {
+            text-align: center;
+        }
+    }
+          
+        /* Hide toggle button on larger screens */
+    @media (min-width: 769px) {
+        .toggle-btn {
+            display: none;
+        }
+    }      
+
+    /* CSS for Book Cards */
+    /* Center the book list container */
+    .book-list-wrapper {
+        display: flex;
+        justify-content: flex-start; 
+        align-items: center;
+        min-height: 100vh;
+        padding: 20px;
+        margin-left: 250px;
+        margin-top: -100px;
+    }
+    
+    /* Grid layout for book list */
+    .book-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 20px;
+        padding: 20px;
+        width: 100%; 
+        max-width: 1200px; 
+    }
+    
+    /* Styling for each book card */
+    .book-card {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100%;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        overflow: hidden;
+        background-color: #fff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Book cover image */
+    .book-card img.book-cover {
+        width: 100%;
+        height: 250px;
+        object-fit: cover;
+    }
+    
+    /* Card body styling */
+    .card-body {
+        padding: 15px;
+        flex-grow: 1;
+    }
+    
+    /* Card title */
+    .card-title {
+        font-size: 1.2em;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+    
+    /* Card text (Author, Year Published, etc.) */
+    .card-text {
+        margin-bottom: 8px;
+    }
+    
+    /* Card text strong labels */
+    .card-text strong {
+        color: #8B4411;
+    }
+    
+    /* Book cover image styling */
+    .book-cover {
+        max-height: 250px;
+        object-fit: cover;
+        width: 100%;
+    }
+      
+</style>
+
+{% block header %} 
+<header class="d-flex justify-content-between align-items-center px-3 py-2" style="margin-left: 250px; background: #8B4411; margin-top: -20px;">
+    <h1 class="m-0 text-white">📚 My Library System</h1>
+    <form class="d-flex" role="search" style="max-width: 300px;">
+        <input class="form-control me-2" type="search" placeholder="Search..." aria-label="Search" style="background: transparent; color: white;">
+        <button class="btn btn-outline-light" type="submit"><i class="bi bi-search"></i></button>
+    </form>
+</header>
+{% endblock %}
+
+<div class="d-flex">
+    <!-- Sidebar -->
+    <div class="sidebar d-flex flex-column flex-shrink-0 p-3" id="sidebar">
+      <h4 class="text-white mb-4">📚Library System</h4>
+      <div class="text-center my-4">
+        <img src="{% static 'img/profilepicture.jpg' %}" alt="Profile Picture" class="rounded-circle" width="100" height="100" style="border: 2px solid white; box-shadow: 0 0 5px;">
+        <h6 class="text-white mt-3">John Doe</h6>
+      </div>
+      <ul class="nav nav-pills flex-column mb-auto">
+        <li class="nav-item">
+          <a href="#" class="nav-link text-white">
+                <i class="bi bi-speedometer2 me-2 text-primary"></i>Dashboard
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-link text-white">
+                <i class="bi bi-book me-2 icon-books"></i>Categories
+          </a>
+        </li>
+        <li>
+           <a href="#" class="nav-link text-white">
+                <i class="bi bi-people me-2 icon-members"></i>Members
+           </a>
+        </li>
+        <li>
+            <a href="#" class="nav-link text-white" data-bs-toggle="modal" data-bs-target="#addBookModal">
+                <i class="bi bi-file-earmark-plus me-2"></i>Add Books
+            </a>
+        </li>
+        <li>
+          <a href="{% url 'logout' %}" class="nav-link text-white">
+              <i class="bi bi-box-arrow-right text-danger me-2"></i>Logout
+          </a>
+      </li>
+      </ul>
+    </div>
+</div>
+
+<!-- Add Books Modal -->
+<div class="modal fade" id="addBookModal" tabindex="-1" aria-labelledby="addBookModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header" style="background: #8B4411; color: white;">
+          <h5 class="modal-title" id="addBookModalLabel">
+            <i class="bi bi-file-earmark-plus text-light me-2"></i> Add New Book
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form method="POST" enctype="multipart/form-data" action="{% url 'add_book' %}">
+          {% csrf_token %}
+          <div class="modal-body" style="background: #AE6E4E; color: white;">
+            <div class="mb-3">
+              <label for="bookTitle" class="form-label">Book Title</label>
+              <input type="text" class="form-control bg-transparent text-light" name="title" id="bookTitle" required>
+            </div>
+            <div class="mb-3">
+              <label for="bookAuthor" class="form-label">Author</label>
+              <input type="text" class="form-control bg-transparent text-light" name="author" id="bookAuthor" required>
+            </div>
+            <div class="mb-3">
+                <label for="bookCategory" class="form-label">Category</label>
+                <input type="text" class="form-control bg-transparent text-light" id="bookCategory" name="category" required>
+            </div>
+            <div class="mb-3">
+              <label for="bookYear" class="form-label">Year Published</label>
+              <input type="number" class="form-control bg-transparent text-light" name="year_published" id="bookYear">
+            </div>
+            <div class="mb-3">
+              <label for="bookDescription" class="form-label">Description</label>
+              <textarea class="form-control bg-transparent text-light" name="description" id="bookDescription" rows="3"></textarea>
+            </div>
+            <div class="mb-3">
+              <label for="bookImage" class="form-label">Upload Book Cover</label>
+              <input class="form-control bg-transparent text-light" type="file" name="image" id="bookImage" accept="image/*">
+            </div>
+          </div>
+          <div class="modal-footer" style="background: #8B4411;">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-light">Add Book</button>
+          </div>
+        </form>
+      </div>
+    </div>
+</div>
+
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show mt-3" role="alert">
+      {{ message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  {% endfor %}
+{% endif %}
+    
+<div class="p-4 main-content" style="flex: 1;">
+    <h2>All Books</h2>
+    <div class="book-list-wrapper">
+        <!-- Book list grid -->
+        <div class="book-list" id="bookList"></div>
+    </div>
+</div>
+
+<!-- Toggle Button for Mobile -->
+<button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+
+<script src="{% static 'behavior.js' %}"></script>
+<script src="{% static 'viewbooksadmin.js' %}"></script>
+{% endblock %}
+
