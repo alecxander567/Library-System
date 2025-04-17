@@ -229,7 +229,6 @@ def delete_post(request):
         else:
             return JsonResponse({'success': False, 'error': 'You can only delete your own posts.'})
 
-
 # Log out
 def logout_view(request):
     logout(request)
