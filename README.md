@@ -15,7 +15,7 @@ and more ongoing features...
 
   # Technologies I'm using </>
   To handle the front-end :
-  - HTML, CSS, Javascript, Bootstrap 5
+  - HTML, CSS, Javascript, Bootstrap 5 <br>
   To handle the back-end :
   - Python(django), SQLlite
 
