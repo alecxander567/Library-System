@@ -18,6 +18,6 @@ and more ongoing features...
   - HTML, CSS, JavaScript, Bootstrap 5 <br>
   
  To handle the back-end :
-  - Python(django), SQLlite
+  - Python(django), SQLite
 
   note : This project is still ongoing...
