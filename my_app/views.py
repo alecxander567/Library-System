@@ -125,7 +125,6 @@ def get_books(request):
 
     return JsonResponse({'books': books_list})
 
-
 # Post (User View)
 @login_required
 def post_user(request):
