@@ -118,13 +118,14 @@
       </div>
       <ul class="nav nav-pills flex-column mb-auto">
         <li class="nav-item">
-          <a href="#" class="nav-link text-white">
+          <a href="{% url 'userhomepage' %}" class="nav-link text-white">
             <i class="bi bi-speedometer2 me-2 text-primary"></i> Newsfeed
           </a>
         </li>
+        </li>
         <li class="nav-item">
-          <a href="#" class="nav-link text-white">
-            <i class="bi bi-clock-history me-2 text-info"></i> Timeline
+          <a href="{% url 'timeline' %}" class="nav-link text-white">
+              <i class="bi bi-clock-history me-2 text-info"></i> Timeline
           </a>
         </li>
         <li>

@@ -2,7 +2,7 @@
 
 {% load static %}
 
-{% block title %}Home Page{% endblock %}
+{% block title %}Timeline{% endblock %}
 
 {% block content %}
 <style>
@@ -17,9 +17,9 @@
     }
   }
 .card {
-  border-radius: 20px;
-  border: none;
-}
+    border-radius: 20px;
+    border: none;
+  }
 .card-body {
     background: #C7AD7F;
     box-shadow: 0 0 5px;
@@ -81,18 +81,7 @@
   </div>
 </div>
 
-<div id="postsContainer">
-  <!-- Newsfeed posts here -->
-</div>
-
-{% if messages %}
-  {% for message in messages %}
-    <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
-      {{ message }}
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-  {% endfor %}
-{% endif %}
+<div id="userPostsContainer"></div>
 
 </div>
 
@@ -100,5 +89,5 @@
 <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
 
 <script src="{% static 'behavior.js' %}"></script>
-<script src="{% static 'get_posts.js' %}"></script>
+<script src="{% static 'timeline.js' %}"></script>
 {% endblock %}
