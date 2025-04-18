@@ -2,7 +2,7 @@
 
 {% load static %}
 
-{% block title %}Adming Page{% endblock %}
+{% block title %}Admin Page{% endblock %}
 
 {% block content %}
 
@@ -265,8 +265,67 @@
         </form>
       </div>
     </div>
+</div>
+
+<!--Edit Books Modal-->
+<div class="modal fade" id="editBookModal" tabindex="-1" aria-labelledby="editBookModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header" style="background: #8B4411; color: white;">
+        <h5 class="modal-title" id="editBookModalLabel">
+          <i class="bi bi-pencil-square text-light me-2"></i> Edit Book
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form id="editBookForm" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="hidden" id="editBookId" name="book_id">
+        <div class="modal-body" style="background: #AE6E4E; color: white;">
+          <div class="mb-3">
+            <label for="editBookTitle" class="form-label">Book Title</label>
+            <input type="text" class="form-control bg-transparent text-light" name="title" id="editBookTitle" required>
+          </div>
+          <div class="mb-3">
+            <label for="editBookAuthor" class="form-label">Author</label>
+            <input type="text" class="form-control bg-transparent text-light" name="author" id="editBookAuthor" required>
+          </div>
+          <div class="mb-3">
+            <label for="editBookCategory" class="form-label">Category</label>
+            <select class="form-select bg-transparent text-light" id="editBookCategory" name="category" required>
+              <option value="General" class="text-dark">General</option>
+              <option value="Fiction" class="text-dark">Fiction</option>
+              <option value="Non-Fiction" class="text-dark">Non-Fiction</option>
+              <option value="Science" class="text-dark">Science</option>
+              <option value="History" class="text-dark">History</option>
+              <option value="Romance" class="text-dark">Romance</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="editBookYear" class="form-label">Year Published</label>
+            <input type="number" class="form-control bg-transparent text-light" name="year_published" id="editBookYear">
+          </div>
+          <div class="mb-3">
+            <label for="editBookDescription" class="form-label">Description</label>
+            <textarea class="form-control bg-transparent text-light" name="description" id="editBookDescription" rows="3"></textarea>
+          </div>
+          <div id="currentImageContainer" class="mb-3">
+            <!-- Current image will be displayed here by JavaScript -->
+          </div>
+          <div class="mb-3">
+            <label for="editBookImage" class="form-label">Change Book Cover</label>
+            <input class="form-control bg-transparent text-light" type="file" name="image" id="editBookImage" accept="image/*">
+            <div class="form-text text-light">Leave empty to keep current image</div>
+          </div>
+        </div>
+        <div class="modal-footer" style="background: #8B4411;">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-light">Save Changes</button>
+        </div>
+      </form>
+    </div>
   </div>
-  
+</div>
+
 {% if messages %}
   {% for message in messages %}
     <div class="alert alert-{{ message.tags }} alert-dismissible fade show mt-3" role="alert">
@@ -289,5 +348,6 @@
 
 <script src="{% static 'behavior.js' %}"></script>
 <script src="{% static 'viewbooksadmin.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 {% endblock %}
 

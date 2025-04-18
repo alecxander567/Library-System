@@ -37,12 +37,12 @@
       width: 100%;
       max-width: 1200px;
     }
-    
-    /* Category Title */
+   
+    /* Category Title - general styling */
     .category-title {
       font-size: 2em;
       font-weight: bold;
-      margin-top: 10px;
+      margin-top: 50px;
       margin-bottom: 15px;
       color: #8B4411;
       text-transform: uppercase;
@@ -50,7 +50,11 @@
       padding-bottom: 5px;
       text-align: center;
     }
-    
+
+    /* Target only the first category title */
+    #bookList > div:first-child .category-title {
+      margin-top: 15px; /* Reduced from 50px to 15px */
+    } 
     /* Book Card Design */
     .book-card {
       background-color: #ffffff;
