@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
-from .forms import SignUpForm
+from .forms import SignUpForm, BookForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from .models import Book, UserAccount, Post, Comment
@@ -24,6 +24,11 @@ def userhomepage(request):
 @login_required
 def timelineuser(request):
     return render(request, 'timeline.html')
+
+# Books view (Users View)
+@login_required
+def books_users(request):
+    return render(request, 'booksUser.html')
 
 # Admin page
 @login_required
@@ -91,6 +96,7 @@ def add_book(request):
         author = request.POST.get('author')
         year = request.POST.get('year_published')
         description = request.POST.get('description')
+        category = request.POST.get('category')
         image = request.FILES.get('image')
 
         if title and author:
@@ -99,15 +105,14 @@ def add_book(request):
                 author=author,
                 year_published=year,
                 description=description,
-                image=image
+                image=image,
+                category=category  # ✅ Include it when creating the Book
             )
             messages.success(request, 'Book successfully added!')
         else:
             messages.error(request, 'Book title and author are required.')
 
         return redirect('adminpage')
-
-    return redirect('adminpage')
 
 # Fetch all the books
 def get_books(request):
@@ -263,6 +268,22 @@ def get_user_posts(request):
 
     return JsonResponse({'posts': post_data})
 
+# Get books for users (Users View)
+def api_books(request):
+    books = Book.objects.all()
+    book_list = []
+
+    for book in books:
+        book_list.append({
+            'title': book.title,
+            'author': book.author,
+            'year_published': book.year_published,
+            'description': book.description,
+            'category': book.category,
+            'image': book.image.url if book.image else None,
+        })
+
+    return JsonResponse({'books': book_list})
 
 # Log out
 def logout_view(request):

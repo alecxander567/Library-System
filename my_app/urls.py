@@ -16,5 +16,7 @@ urlpatterns = [
     path('api/delete_post/', views.delete_post, name='delete_post'),
     path('timeline/', views.timelineuser, name='timeline'),
     path('user-posts/', views.get_user_posts, name='user-posts'), 
+    path('books-users/', views.books_users, name='books_users'),
+    path('user/books/', views.api_books, name='user_books'),
     path('logout/', views.logout_view, name='logout'),
 ]

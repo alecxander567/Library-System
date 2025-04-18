@@ -2,12 +2,28 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class Book(models.Model):
+    GENERAL = 'General'
+    FICTION = 'Fiction'
+    NON_FICTION = 'Non-Fiction'
+    SCIENCE = 'Science'
+    HISTORY = 'History'
+    ROMANCE = 'Romance'
+
+    CATEGORY_CHOICES = [
+        (GENERAL, 'General'),
+        (FICTION, 'Fiction'),
+        (NON_FICTION, 'Non-Fiction'),
+        (SCIENCE, 'Science'),
+        (HISTORY, 'History'),
+        (ROMANCE, 'Romance'),
+    ]
+
     title = models.CharField(max_length=200)
     author = models.CharField(max_length=200)
     year_published = models.IntegerField(null=True, blank=True)
     description = models.TextField(blank=True)
     image = models.ImageField(upload_to='book_images/', null=True, blank=True)
-    category = models.CharField(max_length=100, default='General')
+    category = models.CharField(max_length=100, choices=CATEGORY_CHOICES, default=GENERAL)
 
     def __str__(self):
         return self.title
