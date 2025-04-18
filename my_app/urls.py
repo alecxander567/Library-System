@@ -14,5 +14,7 @@ urlpatterns = [
     path('like/<int:post_id>/', views.like_post, name='like_post'),
     path('comment/<int:post_id>/', views.add_comment, name='add_comment'),
     path('api/delete_post/', views.delete_post, name='delete_post'),
+    path('timeline/', views.timelineuser, name='timeline'),
+    path('user-posts/', views.get_user_posts, name='user-posts'), 
     path('logout/', views.logout_view, name='logout'),
 ]

@@ -20,6 +20,11 @@ def landingpage(request):
 def userhomepage(request):
     return render(request, 'homepageUser.html')
 
+# Timeline page (Users View)
+@login_required
+def timelineuser(request):
+    return render(request, 'timeline.html')
+
 # Admin page
 @login_required
 def adminpage(request):
@@ -228,6 +233,36 @@ def delete_post(request):
             return JsonResponse({'success': True})
         else:
             return JsonResponse({'success': False, 'error': 'You can only delete your own posts.'})
+        
+# Posts of the logged in user only (Users View)
+@login_required
+def get_user_posts(request):
+    # Fetch posts for the logged-in user
+    posts = Post.objects.filter(user=request.user).order_by('-created_at')
+    post_data = []
+
+    for post in posts:
+        post_data.append({
+            'id': post.id,
+            'username': post.user.username,
+            'content': post.content,
+            'created_at': post.created_at.strftime('%Y-%m-%d %H:%M'),
+            'like_count': post.total_likes(),
+            'liked_by_user': request.user in post.likes.all(),
+            'comments': [
+                {
+                    'username': comment.user.username,
+                    'content': comment.content,
+                    'created_at': comment.created_at.strftime('%Y-%m-%d %H:%M')
+                }
+                for comment in post.comments.all()
+            ],
+            # Check if the logged-in user is the post owner
+            'can_delete': request.user == post.user 
+        })
+
+    return JsonResponse({'posts': post_data})
+
 
 # Log out
 def logout_view(request):
