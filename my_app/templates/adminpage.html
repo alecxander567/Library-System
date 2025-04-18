@@ -91,7 +91,6 @@
         }
     }      
 
-    /* CSS for Book Cards */
     /* Center the book list container */
     .book-list-wrapper {
         display: flex;
@@ -162,7 +161,6 @@
         object-fit: cover;
         width: 100%;
     }
-      
 </style>
 
 {% block header %} 
@@ -235,8 +233,17 @@
               <input type="text" class="form-control bg-transparent text-light" name="author" id="bookAuthor" required>
             </div>
             <div class="mb-3">
-                <label for="bookCategory" class="form-label">Category</label>
-                <input type="text" class="form-control bg-transparent text-light" id="bookCategory" name="category" required>
+                <div class="mb-3">
+                  <label for="bookCategory" class="form-label">Category</label>
+                  <select class="form-select bg-transparent text-light" id="bookCategory" name="category" required>
+                    <option value="General" class="text-dark">General</option>
+                    <option value="Fiction" class="text-dark">Fiction</option>
+                    <option value="Non-Fiction" class="text-dark">Non-Fiction</option>
+                    <option value="Science" class="text-dark">Science</option>
+                    <option value="History" class="text-dark">History</option>
+                    <option value="History" class="text-dark">Romance</option>
+                  </select>
+                </div>                
             </div>
             <div class="mb-3">
               <label for="bookYear" class="form-label">Year Published</label>
@@ -258,8 +265,8 @@
         </form>
       </div>
     </div>
-</div>
-
+  </div>
+  
 {% if messages %}
   {% for message in messages %}
     <div class="alert alert-{{ message.tags }} alert-dismissible fade show mt-3" role="alert">
@@ -268,7 +275,7 @@
     </div>
   {% endfor %}
 {% endif %}
-    
+ 
 <div class="p-4 main-content" style="flex: 1;">
     <h2>All Books</h2>
     <div class="book-list-wrapper">
