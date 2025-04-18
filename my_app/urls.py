@@ -18,5 +18,7 @@ urlpatterns = [
     path('user-posts/', views.get_user_posts, name='user-posts'), 
     path('books-users/', views.books_users, name='books_users'),
     path('user/books/', views.api_books, name='user_books'),
+    path('api/books/<int:book_id>/', views.get_book_detail, name='get_book_detail'),
+    path('edit-book/<int:book_id>/', views.edit_book, name='edit_book'),
     path('logout/', views.logout_view, name='logout'),
 ]

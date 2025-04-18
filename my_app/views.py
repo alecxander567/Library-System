@@ -1,13 +1,12 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
-from .forms import SignUpForm
+from .forms import SignUpForm, LoginForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from .models import Book, UserAccount, Post, Comment
 from django.http import JsonResponse
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from .forms import LoginForm
 import json
 from django.shortcuts import get_object_or_404
 
@@ -34,12 +33,9 @@ def books_users(request):
 @login_required
 def adminpage(request):
     user_account = UserAccount.objects.get(user=request.user)
-    
-    # Only admins can access this page
     if user_account.role != 'admin': 
-        # Redirect non-admins to user homepage 
         return redirect('userhomepage')  
-    return render(request, 'adminpage.html')
+    return render(request, 'adminpage.html') 
 
 # Sign up the user
 def signup(request):
@@ -106,7 +102,7 @@ def add_book(request):
                 year_published=year,
                 description=description,
                 image=image,
-                category=category  # ✅ Include it when creating the Book
+                category=category
             )
             messages.success(request, 'Book successfully added!')
         else:
@@ -114,19 +110,21 @@ def add_book(request):
 
         return redirect('adminpage')
 
-# Fetch all the books
+# GET all books
 def get_books(request):
-    # Get all books, including the required fields
-    books = Book.objects.all().values('title', 'author', 'year_published', 'category', 'description', 'image')
+    books = Book.objects.all().values('id', 'title', 'author', 'year_published', 'category', 'description', 'image')
 
+    books_list = []
     for book in books:
-        if book['image']:
-            book['image'] = settings.MEDIA_URL + str(book['image'])
-
-    # Convert queryset to list of dictionaries
-    books_list = list(books)
+        book_data = dict(book)
+        if book_data['image']:
+            book_data['image'] = request.build_absolute_uri(settings.MEDIA_URL + str(book_data['image']))
+        else:
+            book_data['image'] = request.build_absolute_uri(settings.MEDIA_URL + 'default-book-cover.jpg')
+        books_list.append(book_data)
 
     return JsonResponse({'books': books_list})
+
 
 # Post (User View)
 @login_required
@@ -242,7 +240,6 @@ def delete_post(request):
 # Posts of the logged in user only (Users View)
 @login_required
 def get_user_posts(request):
-    # Fetch posts for the logged-in user
     posts = Post.objects.filter(user=request.user).order_by('-created_at')
     post_data = []
 
@@ -284,6 +281,44 @@ def api_books(request):
         })
 
     return JsonResponse({'books': book_list})
+
+# API endpoint to get a specific book's details (Admin View)
+def get_book_detail(request, book_id):
+    book = get_object_or_404(Book, id=book_id)
+    
+    book_data = {
+        'id': book.id,
+        'title': book.title,
+        'author': book.author,
+        'year_published': book.year_published,
+        'category': book.category,
+        'description': book.description,
+        'image': book.image.url if book.image else None,
+    }
+    
+    return JsonResponse(book_data)
+
+def edit_book(request, book_id):
+    book = get_object_or_404(Book, id=book_id)
+    
+    if request.method == 'POST':
+        book.title = request.POST.get('title')
+        book.author = request.POST.get('author')
+        book.year_published = request.POST.get('year_published')
+        book.category = request.POST.get('category')
+        book.description = request.POST.get('description')
+        
+        if 'image' in request.FILES:
+            if book.image:
+                book.image.delete(save=False)
+            
+            book.image = request.FILES['image']
+        
+        book.save()
+        
+        return redirect('adminpage')
+    
+    return redirect('adminpage')
 
 # Log out
 def logout_view(request):
