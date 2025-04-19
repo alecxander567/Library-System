@@ -24,6 +24,15 @@ class Book(models.Model):
     description = models.TextField(blank=True)
     image = models.ImageField(upload_to='book_images/', null=True, blank=True)
     category = models.CharField(max_length=100, choices=CATEGORY_CHOICES, default=GENERAL)
+    rating = models.IntegerField(default=0)
+    total_ratings = models.IntegerField(default=0)
+    rating_sum = models.IntegerField(default=0)  # for calculating average 
+    
+    def update_rating(self, new_rating):
+        self.rating_sum += new_rating
+        self.total_ratings += 1
+        self.rating = self.rating_sum / self.total_ratings
+        self.save()
 
     def __str__(self):
         return self.title
@@ -60,3 +69,13 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"Comment by {self.user.username} on {self.created_at}"
+    
+class BookComment(models.Model):
+    book = models.ForeignKey('Book', on_delete=models.CASCADE, related_name='comments')
+    name = models.CharField(max_length=100)
+    text = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.name} on {self.book.title}"
+    

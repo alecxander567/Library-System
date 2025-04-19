@@ -3,12 +3,13 @@ from django.contrib.auth import login, authenticate
 from .forms import SignUpForm, LoginForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from .models import Book, UserAccount, Post, Comment
+from .models import Book, UserAccount, Post, Comment, BookComment
 from django.http import JsonResponse
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 import json
 from django.shortcuts import get_object_or_404
+from django.views.decorators.csrf import csrf_exempt
 
 # Landingpage
 def landingpage(request):
@@ -271,15 +272,18 @@ def api_books(request):
 
     for book in books:
         book_list.append({
+            'id': book.id,
             'title': book.title,
             'author': book.author,
             'year_published': book.year_published,
             'description': book.description,
             'category': book.category,
             'image': book.image.url if book.image else None,
+            'rating': book.rating,
         })
 
     return JsonResponse({'books': book_list})
+
 
 # API endpoint to get a specific book's details (Admin View)
 def get_book_detail(request, book_id):
@@ -297,6 +301,8 @@ def get_book_detail(request, book_id):
     
     return JsonResponse(book_data)
 
+# Edit books (Admin View)
+@login_required
 def edit_book(request, book_id):
     book = get_object_or_404(Book, id=book_id)
     
@@ -318,6 +324,66 @@ def edit_book(request, book_id):
         return redirect('adminpage')
     
     return redirect('adminpage')
+
+# Function to rate a book (Users View)
+def rate_book(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            book_id = data.get('book_id')
+            rating = int(data.get('rating'))
+
+            book = Book.objects.get(id=book_id)
+            book.rating = rating
+            book.save()
+
+            return JsonResponse({'success': True, 'new_rating': book.rating})
+        except Book.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Book not found'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+        
+# Add comments for the books (Users View)
+def post_comment(request):
+    if request.method == 'POST' and request.user.is_authenticated:
+        try:
+            data = json.loads(request.body)
+            book_id = data.get('book_id')
+            text = data.get('text')
+
+            # Get the book by id
+            book = Book.objects.get(id=book_id)
+            
+            # Create a new comment with the current logged-in user's username
+            comment = BookComment.objects.create(
+                book=book,
+                name=request.user.username,
+                text=text
+            )
+
+            return JsonResponse({'success': True})
+
+        except Book.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Book not found'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+
+    return JsonResponse({'success': False, 'error': 'User not authenticated'})
+        
+# Get the comments (Users View)
+@csrf_exempt
+def get_comments(request, book_id):
+    try:
+        book = Book.objects.get(id=book_id)
+        comments = book.comments.order_by('-created_at')
+        comment_list = [{
+            'name': c.name,
+            'text': c.text,
+            'created_at': c.created_at.strftime('%Y-%m-%d %H:%M')
+        } for c in comments]
+        return JsonResponse({'comments': comment_list})
+    except Book.DoesNotExist:
+        return JsonResponse({'comments': []})
 
 # Log out
 def logout_view(request):
