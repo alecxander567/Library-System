@@ -75,7 +75,7 @@ def login_view(request):
 
                 except UserAccount.DoesNotExist:
                     messages.error(request, "User account doesn't exist.")
-                    return redirect('login')
+                    return redirect('adminpage')
 
             else:
                 messages.error(request, 'Invalid username or password.')
