@@ -48,16 +48,15 @@
       text-transform: uppercase;
       border-bottom: 2px solid #8B4411;
       padding-bottom: 5px;
-      text-align: center;
     }
 
     /* Target only the first category title */
     #bookList > div:first-child .category-title {
-      margin-top: 15px; /* Reduced from 50px to 15px */
+      margin-top: 10px; /* Reduced from 50px to 15px */
     } 
     /* Book Card Design */
     .book-card {
-      background-color: #ffffff;
+      background-color: background-color: lightyellow;;
       border-radius: 10px;
       overflow: hidden;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -116,7 +115,31 @@
       background-color: #f0f0f0;
       color: #333;
     }
-  
+    .modal-body img {
+      max-width: 100%;
+      height: auto;
+    }
+    .modal-backdrop.show {
+      opacity: 0.3 !important; /* Adjust opacity of the backdrop */
+    }
+    .star-rating-container {
+      display: flex;
+      align-items: center;
+    }
+    .star {
+      font-size: 20px;
+      color: #FFD700;
+      margin-right: 2px;
+    }
+    .total-rating {
+      margin-left: 8px;
+    }
+    .book-buttons {
+      margin-top: 10px;
+    }
+    .view-btn, .edit-btn {
+      margin: 5px;
+    }
 </style>
 
 {% block header %} 
@@ -128,7 +151,22 @@
     </form>
 </header>
 {% endblock %}
-      
+
+<!--Modal to view book details-->
+<div class="modal fade" id="bookDetailsModal" tabindex="-1" aria-labelledby="bookDetailsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+          <div class="modal-header" style="background: #8B4411;">
+              <h5 class="modal-title text-light" id="bookDetailsModalLabel"><i class="fas fa-book"></i> Book Details</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body" id="bookDetailsContent">
+              <!-- Content dynamically inserted by JavaScript -->
+          </div>
+      </div>
+  </div>
+</div>
+
 <!-- Main content -->
 <div class="p-4 main-content" style="flex: 1;">
     <div class="book-container">
@@ -139,6 +177,6 @@
 <!-- Toggle Button for Mobile -->
 <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
 
-<script src="{% static 'behavior.js' %}"></script>
-<script src="{% static 'userBooksView.js' %}"></script>
+<script src="{% static 'getBooksForUsers.js'%}"></script>
+
 {% endblock %}
